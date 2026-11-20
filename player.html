@@ -89,5 +89,19 @@ Advertisement
 <button onclick="location.href='videos.html'">Back to Library</button>
 
 </main>
+<script>
+const videoId = new URLSearchParams(window.location.search).get("video");
+
+const videoSources = {
+  "1": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+  "2": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+  "3": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+  "4": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+};
+
+const player = document.querySelector("video");
+player.src = videoSources[videoId] || videoSources["1"];
+player.load();
+</script>
 </body>
 </html>

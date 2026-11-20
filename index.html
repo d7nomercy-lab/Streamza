@@ -1,35 +1,191 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Streamza</title>
-  <style>
-    body {
-      background: #101522;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 40px 15px;
-    }
-    h1 { color: #35d6a0; }
-    p { color: #cbd5e1; }
-    a {
-      display: inline-block;
-      background: #35d6a0;
-      color: #101522;
-      padding: 14px 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streamza</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #101522;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+header {
+  padding: 22px;
+  background: #192235;
+  text-align: center;
+}
+header h1 { color: #35d6a0; margin: 0; }
+main {
+  max-width: 500px;
+  margin: 25px auto;
+  padding: 20px;
+}
+.card {
+  background: #192235;
+  padding: 22px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+}
+h2 { text-align: center; }
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0;
+  border: 1px solid #39465d;
+  border-radius: 8px;
+  background: #101522;
+  color: white;
+}
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: #35d6a0;
+  color: #101522;
+  font-weight: bold;
+}
+.secondary { background: #39465d; color: white; }
+.ad {
+  padding: 25px;
+  border: 1px dashed #64748b;
+  border-radius: 10px;
+  text-align: center;
+  color: #aab6c8;
+  margin: 20px 0;
+}
+#message { color: #35d6a0; text-align: center; }
+.hidden { display: none; }
+footer { text-align: center; color: #8995a8; padding: 20px; }
+</style>
 </head>
 <body>
+
+<header>
   <h1>STREAMZA</h1>
-  <h2>WATCH. EARN. REPEAT.</h2>
-  <p>Welcome to Streamza.</p>
-  <p>Discover videos and enjoy the experience.</p>
-  <a href="signup.html">Get Started</a>
+  <p>WATCH. EARN. REPEAT.</p>
+</header>
+
+<main>
+  <div class="ad">
+    Advertisement space
+    <p>Ad placement coming soon</p>
+  </div>
+
+  <section class="card" id="auth">
+    <h2>Join Streamza</h2>
+    <p>Create an account or sign in.</p>
+
+    <input id="username" placeholder="Username (for registration)">
+    <input id="email" type="email" placeholder="Email address">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="signup()">Create account</button>
+    <button class="secondary" onclick="login()">Login</button>
+    <p id="message"></p>
+  </section>
+
+  <section class="card hidden" id="welcome">
+    <h2>Welcome to Streamza!</h2>
+    <p id="userEmail"></p>
+    <p>Your testing points: 0</p>
+    <p>Explore videos and enjoy Streamza.</p>
+    <button onclick="logout()">Logout</button>
+  </section>
+
+  <div class="ad">
+    Advertisement space
+    <p>Ad placement coming soon</p>
+  </div>
+</main>
+
+<footer>
+  Streamza © 2026
+  <p>Testing points have no cash value.</p>
+</footer>
+
+<script>
+const SUPABASE_URL = "https://ckupgisdiugqerzjgnmj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_vgo1VLD4YZZxaqx9cZXAyg_kGLL0KpT";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const message = document.getElementById("message");
+
+async function signup() {
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!username || !email || !password) {
+    message.textContent = "Please fill in all three fields.";
+    return;
+  }
+
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password,
+    options: { data: { username } }
+  });
+
+  if (error) {
+    message.textContent = error.message;
+    return;
+  }
+
+  message.textContent = data.session
+    ? "Account created successfully!"
+    : "Check your email to confirm your account.";
+  await checkUser();
+}
+
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const { error } = await sb.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    message.textContent = error.message;
+    return;
+  }
+
+  message.textContent = "Login successful!";
+  await checkUser();
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  await checkUser();
+}
+
+async function checkUser() {
+  const { data } = await sb.auth.getSession();
+  const session = data.session;
+
+  document.getElementById("auth").classList.toggle("hidden", !!session);
+  document.getElementById("welcome").classList.toggle("hidden", !session);
+
+  if (session) {
+    document.getElementById("userEmail").textContent =
+      "Signed in as " + session.user.email;
+  }
+}
+
+sb.auth.onAuthStateChange(() => {
+  checkUser();
+});
+
+checkUser();
+</script>
+
 </body>
 </html>

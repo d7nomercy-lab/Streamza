@@ -94,9 +94,21 @@ const videoId = new URLSearchParams(window.location.search).get("video");
 
 const videoSources = {
   "1": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-  "2": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-  "3": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-  "4": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+  "2": "https://cdn.truefilesize.com/mp4/sample-1mb.mp4",
+  "3": "https://cdn.truefilesize.com/mp4/sample-5mb.mp4",
+  "4": "https://cdn.truefilesize.com/mp4/sample-10mb.mp4"
+};
+
+const player = document.querySelector("video");
+
+if (videoSources[videoId]) {
+  player.src = videoSources[videoId];
+  player.load();
+} else {
+  player.src = videoSources["1"];
+  player.load();
+}
+</script>
 };
 
 const player = document.querySelector("video");

@@ -1,194 +1,922 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Streamza</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-* { box-sizing: border-box; }
-body {
+:root {
+  --bg: #090b14;
+  --card: #121526;
+  --card2: #181c33;
+  --purple: #6c47ff;
+  --text: #ffffff;
+  --muted: #9499b7;
+  --border: rgba(255,255,255,.09);
+}
+
+* {
+  box-sizing: border-box;
   margin: 0;
-  background: #101522;
-  color: white;
+  padding: 0;
   font-family: Arial, sans-serif;
 }
-header {
-  padding: 22px;
-  background: #192235;
-  text-align: center;
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
 }
-header h1 { color: #35d6a0; margin: 0; }
-main {
-  max-width: 500px;
-  margin: 25px auto;
-  padding: 20px;
+
+button, input {
+  font: inherit;
 }
-.card {
-  background: #192235;
-  padding: 22px;
-  border-radius: 14px;
-  margin-bottom: 20px;
-}
-h2 { text-align: center; }
-input {
-  width: 100%;
-  padding: 14px;
-  margin: 8px 0;
-  border: 1px solid #39465d;
-  border-radius: 8px;
-  background: #101522;
-  color: white;
-}
+
 button {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* AUTH SCREEN */
+
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top, #25204b 0%, transparent 45%),
+    var(--bg);
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 28px 22px;
+  box-shadow: 0 15px 45px rgba(0,0,0,.4);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.logo-icon {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#6c47ff,#3921a5);
+  font-size: 22px;
+}
+
+.logo h1 {
+  font-size: 24px;
+}
+
+.auth-box h2 {
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.auth-description {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+.auth-box input {
   width: 100%;
   padding: 14px;
-  margin-top: 10px;
-  border: 0;
-  border-radius: 8px;
-  background: #35d6a0;
-  color: #101522;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: white;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+.auth-box input:focus {
+  border-color: var(--purple);
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg,#6c47ff,#5630db);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.primary-btn:disabled {
+  opacity: .6;
+}
+
+.switch-text {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.switch-text span {
+  color: #a996ff;
+  cursor: pointer;
   font-weight: bold;
 }
-.secondary { background: #39465d; color: white; }
-.ad {
-  padding: 25px;
-  border: 1px dashed #64748b;
-  border-radius: 10px;
-  text-align: center;
-  color: #aab6c8;
-  margin: 20px 0;
+
+.message {
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 14px;
+  color: #a996ff;
 }
-#message { color: #35d6a0; text-align: center; }
-.hidden { display: none; }
-footer { text-align: center; color: #8995a8; padding: 20px; }
+
+/* APP */
+
+#appScreen {
+  min-height: 100vh;
+  padding-bottom: 90px;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  padding: 16px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.topbar-logo .logo-icon {
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--purple);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+}
+
+.greeting {
+  margin-bottom: 20px;
+}
+
+.greeting-label {
+  color: #83aaff;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.greeting h2 {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.greeting p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.featured {
+  min-height: 310px;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  margin: 22px 0;
+  background:
+    linear-gradient(to top,rgba(5,7,15,.98),rgba(5,7,15,.2)),
+    url("https://images.unsplash.com/photo-148959ベ?auto=format&fit=crop&w=900&q=80");
+  background-color: #181c33;
+  background-size: cover;
+  background-position: center;
+}
+
+.featured-tag {
+  color: #a996ff;
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.featured h3 {
+  font-size: 24px;
+  line-height: 1.35;
+  margin-bottom: 10px;
+}
+
+.featured p {
+  color: #c0c4d9;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.watch-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg,#477dff,#7141ed);
+  border: none;
+  border-radius: 13px;
+  color: white;
+  font-weight: bold;
+}
+
+.section-title {
+  font-size: 19px;
+  margin: 22px 0 14px;
+}
+
+.info-card {
+  background: linear-gradient(135deg,#14192d,#101d2c);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.info-label {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.info-value {
+  font-size: 27px;
+  font-weight: bold;
+}
+
+.demo-note {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.video-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.video-card h3 {
+  font-size: 16px;
+  margin-bottom: 7px;
+}
+
+.video-card p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.player-box {
+  border-radius: 16px;
+  overflow: hidden;
+  background: black;
+  margin-bottom: 16px;
+}
+
+.player-box iframe {
+  width: 100%;
+  height: 260px;
+  border: none;
+}
+
+.account-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.account-card p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 10px 0;
+  overflow-wrap: anywhere;
+}
+
+.logout-button {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #763c55;
+  background: #321a28;
+  color: #ffb7cb;
+  border-radius: 12px;
+  margin-top: 12px;
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0 14px;
+  background: rgba(12,15,28,.97);
+  border-top: 1px solid var(--border);
+  z-index: 50;
+}
+
+.nav-button {
+  border: none;
+  background: none;
+  color: #70758f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  min-width: 65px;
+}
+
+.nav-button .nav-icon {
+  font-size: 20px;
+  padding: 5px 14px;
+  border-radius: 30px;
+}
+
+.nav-button.active {
+  color: #a996ff;
+}
+
+.nav-button.active .nav-icon {
+  background: rgba(108,71,255,.2);
+}
+
+.toast {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #252947;
+  padding: 12px 18px;
+  border: 1px solid var(--purple);
+  border-radius: 12px;
+  z-index: 100;
+  font-size: 13px;
+  max-width: 90%;
+  text-align: center;
+}
+
+@media (min-width: 600px) {
+  .app-container {
+    padding: 24px;
+  }
+}
 </style>
 </head>
+
 <body>
 
-<header>
-  <h1>STREAMZA</h1>
-  <p>WATCH. EARN. REPEAT.</p>
-</header>
+<div id="toast" class="toast hidden"></div>
 
-<main>
-  <div class="ad">
-    Advertisement space
-    <p>Ad placement coming soon</p>
+<!-- OUTSIDE: LOGIN / SIGNUP -->
+
+<section id="authScreen" class="auth-screen">
+  <div class="auth-box">
+
+    <div class="logo">
+      <div class="logo-icon">▶</div>
+      <h1>Streamza</h1>
+    </div>
+
+    <h2 id="authTitle">Welcome back</h2>
+
+    <p class="auth-description" id="authDescription">
+      Sign in to continue to Streamza.
+    </p>
+
+    <form id="authForm">
+
+      <input
+        type="text"
+        id="usernameInput"
+        placeholder="Username"
+        autocomplete="username"
+        class="hidden"
+      />
+
+      <input
+        type="email"
+        id="emailInput"
+        placeholder="Email address"
+        autocomplete="email"
+        required
+      />
+
+      <input
+        type="password"
+        id="passwordInput"
+        placeholder="Password"
+        autocomplete="current-password"
+        required
+        minlength="6"
+      />
+
+      <button type="submit" class="primary-btn" id="authSubmit">
+        Login
+      </button>
+
+    </form>
+
+    <p class="switch-text">
+      <span id="switchAuth" onclick="toggleAuthMode()">
+        Create an account
+      </span>
+    </p>
+
+    <div id="authMessage" class="message"></div>
+
+  </div>
+</section>
+
+<!-- INSIDE: APP DASHBOARD -->
+
+<section id="appScreen" class="hidden">
+
+  <div class="app-container">
+
+    <header class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-icon">▶</div>
+        Streamza
+      </div>
+
+      <button class="avatar" id="avatarButton" onclick="openAccount()">
+        U
+      </button>
+    </header>
+
+    <!-- DASHBOARD -->
+
+    <main id="dashboardView" class="view">
+
+      <div class="greeting">
+        <div class="greeting-label" id="greetingTime">
+          WELCOME
+        </div>
+
+        <h2 id="displayName">User</h2>
+
+        <p>Welcome to your Streamza dashboard.</p>
+      </div>
+
+      <button class="watch-button" onclick="openWatch()">
+        ▶ Browse Videos
+      </button>
+
+      <section class="featured">
+
+        <div class="featured-tag">FEATURED MOVIE</div>
+
+        <h3>The Charlie Chaplin Festival</h3>
+
+        <p>Classic comedy • 1938 listing</p>
+
+        <button class="watch-button" onclick="openWatch()">
+          ▶ Watch movie
+        </button>
+
+      </section>
+
+      <h3 class="section-title">Your Dashboard</h3>
+
+      <div class="info-card">
+        <div class="info-label">Demo Points</div>
+        <div class="info-value">0</div>
+        <p class="demo-note">
+          Points are for display/testing only. They are not money
+          and cannot be withdrawn.
+        </p>
+      </div>
+
+      <h3 class="section-title">Continue Watching</h3>
+
+      <div class="video-card">
+        <h3>The Charlie Chaplin Festival</h3>
+        <p>Classic comedy film</p>
+        <button class="watch-button" onclick="openWatch()">
+          ▶ Continue
+        </button>
+      </div>
+
+    </main>
+
+    <!-- WATCH -->
+
+    <section id="watchView" class="view hidden">
+
+      <h2 class="section-title">Watch Videos</h2>
+
+      <div class="video-card">
+
+        <h3>The Charlie Chaplin Festival</h3>
+
+        <p>Internet Archive hosted video</p>
+
+        <div class="player-box">
+          <iframe
+            src="https://archive.org/embed/charlie_chaplin_film_fest"
+            allow="fullscreen"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <p>
+          The video is provided through the Internet Archive's
+          embedded player.
+        </p>
+
+      </div>
+
+    </section>
+
+    <!-- ACCOUNT -->
+
+    <section id="accountView" class="view hidden">
+
+      <h2 class="section-title">My Account</h2>
+
+      <div class="account-card">
+
+        <h3>Account Details</h3>
+
+        <p id="accountUsername">Username: —</p>
+
+        <p id="accountEmail">Email: —</p>
+
+        <button class="logout-button" onclick="logout()">
+          Log Out
+        </button>
+
+      </div>
+
+    </section>
+
   </div>
 
-  <section class="card" id="auth">
-    <h2>Join Streamza</h2>
-    <p>Create an account or sign in.</p>
+  <!-- BOTTOM NAV -->
 
-    <input id="username" placeholder="Username (for registration)">
-    <input id="email" type="email" placeholder="Email address">
-    <input id="password" type="password" placeholder="Password">
+  <nav class="bottom-nav">
 
-    <button onclick="signup()">Create account</button>
-    <button class="secondary" onclick="login()">Login</button>
-    <p id="message"></p>
-  </section>
+    <button class="nav-button active" id="navDashboard"
+      onclick="switchView('dashboard')">
+      <div class="nav-icon">⌂</div>
+      Dashboard
+    </button>
 
-  <section class="card hidden" id="welcome">
-    <h2>Welcome to Streamza!</h2>
-    <p id="userEmail"></p>
-    <p>Your testing points: 0</p>
-    <p>Explore videos and enjoy Streamza.</p>
-<a href="videos.html" style="display:block;background:#35d6a0
-  ;color:#101522;padding:14px;text-align:
-    center;border-radius:8px;text-decoratio
-    n:none;font-weight:bold;margin-top:15px
-  ;">Open Video Library</a>
-    <button onclick="logout()">Logout</button>
-  </section>
+    <button class="nav-button" id="navWatch"
+      onclick="switchView('watch')">
+      <div class="nav-icon">▶</div>
+      Watch
+    </button>
 
-  <div class="ad">
-    Advertisement space
-    <p>Ad placement coming soon</p>
-  </div>
-</main>
+    <button class="nav-button" id="navAccount"
+      onclick="switchView('account')">
+      <div class="nav-icon">♙</div>
+      Account
+    </button>
 
-<footer>
-  Streamza © 2026
-  <p>Testing points have no cash value.</p>
-</footer>
+  </nav>
+
+</section>
 
 <script>
-const SUPABASE_URL = "https://ckupgisdiugqerzjgnmj.supabase.co";
-const SUPABASE_KEY = "sb_publishable_vgo1VLD4YZZxaqx9cZXAyg_kGLL0KpT";
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+/* SUPABASE CONNECTION */
 
-const message = document.getElementById("message");
+const SUPABASE_URL =
+  "https://ckupgisdiugqerzjgnmj.supabase.co";
 
-async function signup() {
-  const username = document.getElementById("username").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+const SUPABASE_KEY =
+  "sb_publishable_vgo1VLD4YZZxaqx9cZXAyg_kGLL0KpT";
 
-  if (!username || !email || !password) {
-    message.textContent = "Please fill in all three fields.";
-    return;
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+/* APP ELEMENTS */
+
+const authScreen = document.getElementById("authScreen");
+const appScreen = document.getElementById("appScreen");
+
+const authForm = document.getElementById("authForm");
+const authTitle = document.getElementById("authTitle");
+const authDescription = document.getElementById("authDescription");
+const authSubmit = document.getElementById("authSubmit");
+const authMessage = document.getElementById("authMessage");
+
+const usernameInput = document.getElementById("usernameInput");
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
+
+let signupMode = false;
+let currentUser = null;
+
+/* AUTH MODE */
+
+function toggleAuthMode() {
+  signupMode = !signupMode;
+
+  if (signupMode) {
+    authTitle.textContent = "Create account";
+    authDescription.textContent =
+      "Create your Streamza account to get started.";
+    usernameInput.classList.remove("hidden");
+    usernameInput.required = true;
+    passwordInput.autocomplete = "new-password";
+    authSubmit.textContent = "Sign Up";
+    document.getElementById("switchAuth").textContent =
+      "Already have an account? Login";
+  } else {
+    authTitle.textContent = "Welcome back";
+    authDescription.textContent =
+      "Sign in to continue to Streamza.";
+    usernameInput.classList.add("hidden");
+    usernameInput.required = false;
+    passwordInput.autocomplete = "current-password";
+    authSubmit.textContent = "Login";
+    document.getElementById("switchAuth").textContent =
+      "Create an account";
   }
 
-  const { data, error } = await sb.auth.signUp({
-    email,
-    password,
-    options: { data: { username } }
-  });
+  authMessage.textContent = "";
+}
 
-  if (error) {
-    message.textContent = error.message;
-    return;
+/* LOGIN / SIGNUP */
+
+authForm.addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  authSubmit.disabled = true;
+  authMessage.textContent = "Please wait...";
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  try {
+
+    if (signupMode) {
+
+      const username = usernameInput.value.trim();
+
+      if (!username) {
+        throw new Error("Please enter a username.");
+      }
+
+      const { data, error } =
+        await supabaseClient.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              username: username
+            },
+            emailRedirectTo: window.location.origin +
+              window.location.pathname
+          }
+        });
+
+      if (error) throw error;
+
+      if (data.session) {
+        showToast("Account created!");
+      } else {
+        authMessage.textContent =
+          "Account created. Check your email if confirmation is required, then log in.";
+        authSubmit.disabled = false;
+        return;
+      }
+
+    } else {
+
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+      if (error) throw error;
+
+      currentUser = data.user;
+    }
+
+    authMessage.textContent = "";
+
+  } catch (error) {
+
+    authMessage.textContent = error.message;
+
+  } finally {
+
+    authSubmit.disabled = false;
+
   }
-
-  message.textContent = data.session
-    ? "Account created successfully!"
-    : "Check your email to confirm your account.";
-  await checkUser();
-}
-
-async function login() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
-  const { error } = await sb.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if (error) {
-    message.textContent = error.message;
-    return;
-  }
-
-  message.textContent = "Login successful!";
-  await checkUser();
-}
-
-async function logout() {
-  await sb.auth.signOut();
-  await checkUser();
-}
-
-async function checkUser() {
-  const { data } = await sb.auth.getSession();
-  const session = data.session;
-
-  document.getElementById("auth").classList.toggle("hidden", !!session);
-  document.getElementById("welcome").classList.toggle("hidden", !session);
-
-  if (session) {
-    document.getElementById("userEmail").textContent =
-      "Signed in as " + session.user.email;
-  }
-}
-
-sb.auth.onAuthStateChange(() => {
-  checkUser();
 });
 
-checkUser();
+/* AUTH STATE */
+
+async function checkSession() {
+
+  const { data, error } =
+    await supabaseClient.auth.getSession();
+
+  if (error) {
+    showAuth();
+    return;
+  }
+
+  if (data.session) {
+    currentUser = data.session.user;
+    showApp(currentUser);
+  } else {
+    showAuth();
+  }
+}
+
+supabaseClient.auth.onAuthStateChange(
+  function(event, session) {
+
+    if (session && session.user) {
+      currentUser = session.user;
+      showApp(session.user);
+    } else {
+      currentUser = null;
+      showAuth();
+    }
+
+  }
+);
+
+/* SCREEN SWITCHING */
+
+function showAuth() {
+  authScreen.classList.remove("hidden");
+  appScreen.classList.add("hidden");
+}
+
+function showApp(user) {
+
+  if (!user) return;
+
+  currentUser = user;
+
+  authScreen.classList.add("hidden");
+  appScreen.classList.remove("hidden");
+
+  const username =
+    user.user_metadata?.username ||
+    user.email?.split("@")[0] ||
+    "User";
+
+  document.getElementById("displayName").textContent =
+    username;
+
+  document.getElementById("avatarButton").textContent =
+    username.substring(0, 2).toUpperCase();
+
+  document.getElementById("accountUsername").textContent =
+    "Username: " + username;
+
+  document.getElementById("accountEmail").textContent =
+    "Email: " + (user.email || "");
+
+  const hour = new Date().getHours();
+
+  document.getElementById("greetingTime").textContent =
+    hour < 12 ? "GOOD MORNING" :
+    hour < 18 ? "GOOD AFTERNOON" :
+    "GOOD EVENING";
+
+}
+
+/* NAVIGATION */
+
+function switchView(viewName) {
+
+  document.querySelectorAll(".view").forEach(view => {
+    view.classList.add("hidden");
+  });
+
+  document.querySelectorAll(".nav-button").forEach(button => {
+    button.classList.remove("active");
+  });
+
+  document.getElementById(viewName + "View")
+    .classList.remove("hidden");
+
+  const navButton = document.getElementById(
+    "nav" + viewName.charAt(0).toUpperCase() +
+    viewName.slice(1)
+  );
+
+  if (navButton) {
+    navButton.classList.add("active");
+  }
+
+}
+
+function openWatch() {
+  switchView("watch");
+}
+
+function openAccount() {
+  switchView("account");
+}
+
+/* LOGOUT */
+
+async function logout() {
+
+  const { error } = await supabaseClient.auth.signOut();
+
+  if (error) {
+    showToast(error.message);
+    return;
+  }
+
+  currentUser = null;
+  showAuth();
+  authForm.reset();
+  signupMode = false;
+  toggleAuthMode();
+  showToast("Logged out successfully");
+
+}
+
+/* TOAST */
+
+function showToast(message) {
+
+  const toast = document.getElementById("toast");
+
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+
+  setTimeout(function() {
+    toast.classList.add("hidden");
+  }, 3000);
+
+}
+
+/* START */
+
+checkSession();
+
 </script>
 
 </body>
